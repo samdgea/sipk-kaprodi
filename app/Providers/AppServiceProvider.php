@@ -7,6 +7,7 @@ use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use App\Models\User;
 use App\Observers\ModelObserver;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
+
         User::observe(new ModelObserver);
         Dosen::observe(new ModelObserver);
     }

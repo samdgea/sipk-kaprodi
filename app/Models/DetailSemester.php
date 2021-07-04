@@ -14,7 +14,7 @@ class DetailSemester extends Model
 
     protected $fillable = [
         'mahasiswa_id',
-        'semester',
+        'academic_year_id',
         'ips'
     ];
 

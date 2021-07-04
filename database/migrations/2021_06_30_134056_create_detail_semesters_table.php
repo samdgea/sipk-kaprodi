@@ -11,7 +11,7 @@ class CreateDetailSemestersTable extends Migration
         Schema::create('detail_semester', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('mahasiswa_id');
-            $table->integer('semester');
+            $table->bigInteger('academic_year_id');
             $table->double('ips');
             $table->timestamps();
         });

@@ -18,6 +18,9 @@
                     <x-jet-nav-link href="{{ route('mahasiswa') }}" :active="request()->routeIs('mahasiswa')">
                         {{ __('Mahasiswa') }}
                     </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('academic-year.management') }}" :active="request()->routeIs('academic-year.management')">
+                        {{ __('Tahun Akademik') }}
+                    </x-jet-nav-link>
                     @if (auth()->user()->can('view-user') || auth()->user()->hasRole('Super User'))
                         <x-jet-nav-link href="{{ route('user.management') }}" :active="request()->routeIs('user.management')">
                             {{ __('User Management') }}

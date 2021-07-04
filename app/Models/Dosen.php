@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Haruncpi\LaravelUserActivity\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Dosen extends Model
 {
+    use Loggable;
     use HasFactory;
 
     protected $table = 'dosen';

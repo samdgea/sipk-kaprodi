@@ -20,13 +20,13 @@
                             <td class="border px-4 py-2">{{ $idx + 1 }}</td>
                             <td class="border px-4 py-2">{{ $mahasiswa->nim_mahasiswa }}</td>
                             <td class="border px-4 py-2">{{ $mahasiswa->full_name }}</td>
-                            <td class="border px-4 py-2">{{ $mahasiswa->program_studi }}</td>
-                            <td class="border px-4 py-2">{{ $mahasiswa->detailSemester->last()->semester }}</td>
+                            <td class="border px-4 py-2">{{ $mahasiswa->studyProgram->nama_program_studi }}</td>
+                            <td class="border px-4 py-2">{{ $mahasiswa->detailSemester->count('id') }}</td>
                             <td class="border px-4 py-2">{{ number_format($mahasiswa->detailSemester->average('ips'), 2, '.', '') }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4">Ooops there's nothing here</td>
+                            <td class="border px-4 py-2" colspan="4">Ooops there's nothing here</td>
                         </tr>
                     @endforelse
                     @if($listMahasiswa->hasPages())

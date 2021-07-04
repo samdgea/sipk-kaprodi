@@ -4,16 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateMahasiswaTableAddColumnRegYear extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         Schema::table('mahasiswa', function (Blueprint $table) {
-            $table->year('tahun_daftar')->after('nim_mahasiswa')->nullable();
+            if (!Schema::hasColumn('mahasiswa', 'program_studi')) $table->dropColumn('program_studi');
         });
     }
 
     public function down()
     {
     }
-}
+};

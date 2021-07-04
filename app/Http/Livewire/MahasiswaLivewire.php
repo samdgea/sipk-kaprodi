@@ -21,7 +21,7 @@ class MahasiswaLivewire extends Component
     {
 
         if (!empty($this->searchNim)) {
-            $mahasiswa = Mahasiswa::where('nim_mahasiswa', 'like',  $this->searchNim . '%')->orderBy('nim_mahasiswa', 'DESC')->paginate(10);
+            $mahasiswa = Mahasiswa::where('nim_mahasiswa', 'like', $this->searchNim . '%')->orderBy('nim_mahasiswa', 'DESC')->paginate(10);
         } else {
             $mahasiswa = Mahasiswa::orderBy('nim_mahasiswa', 'DESC')->paginate(10);
         }

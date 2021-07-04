@@ -20,7 +20,7 @@ class DosenFactory extends Factory
             'first_name'    => $this->faker->firstName(),
             'last_name'     => $this->faker->lastName(),
             'nidn'          => random_int(1000000, 9999999),
-            'date_joined'   => $this->faker->date('Y-m-d'),
+            'date_joined'   => $this->faker->dateTimeBetween('-30 years', 'now', null)->format('Y-m-d'),
             'is_active'     => true,
         ];
     }

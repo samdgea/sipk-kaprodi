@@ -18,9 +18,33 @@
                     <x-jet-nav-link href="{{ route('mahasiswa') }}" :active="request()->routeIs('mahasiswa')">
                         {{ __('Mahasiswa') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('academic-year.management') }}" :active="request()->routeIs('academic-year.management')">
-                        {{ __('Tahun Akademik') }}
-                    </x-jet-nav-link>
+                    <div class="ml-3 relative"  style="padding-top: 17px;">
+                        <x-jet-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <span class="inline-flex rounded-md">
+                                    <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
+                                        {{ __('LKPS') }}
+
+                                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </span>
+                            </x-slot>
+                            <x-slot name="content">
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('LKPS Reporting') }}
+                                </div>
+
+                                <x-jet-dropdown-link href="{{ route('academic-year.management') }}">
+                                    {{ __('Tahun Akademik') }}
+                                </x-jet-dropdown-link>
+                                <x-jet-dropdown-link href="{{ route('lkps.report') }}">
+                                    {{ __('Report LKPS') }}
+                                </x-jet-dropdown-link>
+                            </x-slot>
+                        </x-jet-dropdown>
+                    </div>
                     @if (auth()->user()->can('view-user') || auth()->user()->hasRole('Super User'))
                         <x-jet-nav-link href="{{ route('user.management') }}" :active="request()->routeIs('user.management')">
                             {{ __('User Management') }}
@@ -158,6 +182,25 @@
             <x-jet-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-jet-responsive-nav-link>
+            <x-jet-responsive-nav-link href="{{ route('mahasiswa') }}" :active="request()->routeIs('mahasiswa')">
+                {{ __('Mahasiswa') }}
+            </x-jet-responsive-nav-link>
+            <x-jet-responsive-nav-link href="{{ route('academic-year.management') }}" :active="request()->routeIs('academic-year.management')">
+                {{ __('Tahun Akademik') }}
+            </x-jet-responsive-nav-link>
+            <x-jet-responsive-nav-link href="{{ route('lkps.report') }}" :active="request()->routeIs('lkps.report')">
+                {{ __('Report LKPS') }}
+            </x-jet-responsive-nav-link>
+            @if (auth()->user()->can('view-user') || auth()->user()->hasRole('Super User'))
+                <x-jet-responsive-nav-link href="{{ route('user.management') }}" :active="request()->routeIs('user.management')">
+                    {{ __('User Management') }}
+                </x-jet-responsive-nav-link>
+            @endif
+            @if(auth()->user()->can('view-activity-log') || auth()->user()->hasRole('Super User'))
+                <x-jet-responsive-nav-link href="{{ route('log.management') }}" :active="request()->routeIs('log.management')">
+                    {{ __('Activity Logs') }}
+                </x-jet-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

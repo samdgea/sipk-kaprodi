@@ -22,6 +22,8 @@
         "laravel/jetstream": "^2.3",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "league/flysystem-cached-adapter": "~1.0",
         "livewire/livewire": "^2.5",
         "mistic100/randomcolor": "^1.0",
         "samdgea/licensee": "dev-master",

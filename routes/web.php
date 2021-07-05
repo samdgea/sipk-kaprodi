@@ -23,6 +23,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum', 'verified']]
 
    Route::group(['prefix' => 'manage', 'middleware' => []], function () {
        Route::get('/academic-year', \App\Http\Livewire\AcademicYearLivewire::class)->name('academic-year.management');//->middleware('role:Kaprodi');
+       Route::get('/generate-lkps', \App\Http\Livewire\ReportLivewire::class)->name('lkps.report');
+
       Route::get('/users', App\Http\Livewire\UserManagementLivewire::class)->name('user.management')->middleware('role_or_permission:Super Admin|view-user');
       Route::get('/activity-log', \App\Http\Livewire\ActivityLogLivewire::class)->name('log.management');//->middleware('role_or_permission:Super Admin|view-activity-log');
    });

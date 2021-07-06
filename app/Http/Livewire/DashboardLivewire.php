@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\Dosen;
 use Asantibanez\LivewireCharts\Facades\LivewireCharts;
+use Asantibanez\LivewireCharts\Models\ColumnChartModel;
+use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\Mahasiswa;
@@ -11,10 +13,11 @@ use Colors\RandomColor;
 
 class DashboardLivewire extends Component
 {
-    public $firstRun = true;
+    public $viewChart = 'column';
+    public $toYear = 2021;
+    public $fromYear = 2016;
 
-    public $colorsMahasiswa;
-    public $colorsDosen;
+    public $ratioSDM;
 
     /**
      * Get the view / contents that represent the component.
@@ -23,69 +26,86 @@ class DashboardLivewire extends Component
      */
     public function render()
     {
-        $pieChartModelMahasiswa = $this->piechartMahasiswa();
-        $pieChartModelDosen = $this->piechartDosen();
+        if ($this->viewChart == 'column') {
+            $this->ratioSDM = null;
+            $chartModel = $this->barCharts();
+        } else {
+            $this->ratioSDM = null;
+            $chartModel = $this->lineCharts();
+        }
 
         return view('livewire.dashboard.index', [
-            'pieChartMahasiswa' => $pieChartModelMahasiswa,
-            'pieChartDosen' => $pieChartModelDosen
+            'chartModel' => $chartModel
         ]);
     }
 
-    private function piechartDosen() {
-        $dosen = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
-                ->whereRaw('YEAR(date_joined) BETWEEN 2000 AND 2021')->groupBy('joined_year')->get();
-        $hexList = RandomColor::many($dosen->count(), ['hue' => 'yellow', 'format' => 'hex']);
+    private function barCharts() {
+        $barCharts = (new ColumnChartModel())
+            ->setTitle('Jumlah Mahasiswa & Dosen')
+            ->multiColumn()
+            ->setAnimated(true)
+            ->withGrid();
 
-        foreach($dosen as $idx => $data) {
-            $this->colorsDosen[$data->joined_year] = $hexList[$idx];
+        $mhsYears = Mahasiswa::select(DB::raw("tahun_daftar, COUNT(id) as total_mahasiswa"))
+            ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('tahun_daftar')->get();
+
+        $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
+            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('joined_year')->get();
+
+        foreach ($mhsYears as $mahasiswa) {
+            $barCharts->addSeriesColumn('Mahasiswa', "$mahasiswa->tahun_daftar", $mahasiswa->total_mahasiswa);
+            $this->ratioSDM[$mahasiswa->tahun_daftar]['mahasiswa'] = $mahasiswa->total_mahasiswa;
         }
 
-        $pieChartModelDosen =  $dosen->reduce(function ($pieChartModelDosen, $data) {
-                $tahunDaftar = $data->joined_year;
-                $value = $data->total_dosen;
+        foreach ($dosens as $dosen) {
+            $barCharts->addSeriesColumn('Dosen', "$dosen->joined_year", $dosen->total_dosen);
+            $this->ratioSDM[$dosen->joined_year]['dosen'] = $dosen->total_dosen;
+        }
 
-                return $pieChartModelDosen->addSlice($tahunDaftar, $value, $this->colorsDosen[$tahunDaftar]);
-            }, LivewireCharts::pieChartModel()
-                ->setTitle('Jumlah Dosen')
-                ->setAnimated($this->firstRun)
-                ->setDataLabelsEnabled(true)
-                ->legendPositionBottom()
-                ->legendHorizontallyAlignedCenter()
-                ->setColors($this->colorsDosen)
-                ->withGrid()
-            );
+        foreach($this->ratioSDM as $year => $sdm) {
+            $this->ratioSDM[$year]['ratio'] = $this->find_ratio($this->ratioSDM[$year]['dosen'], $this->ratioSDM[$year]['mahasiswa']);
+        }
 
-        return $pieChartModelDosen;
+        return $barCharts;
     }
 
-    private function piechartMahasiswa() {
-        $mhsYears = Mahasiswa::select('tahun_daftar')->groupBy('tahun_daftar')->get()->pluck('tahun_daftar');
-        $hexList = RandomColor::many($mhsYears->count(), ['hue' => 'green', 'format' => 'hex']);
-        $temp = $mhsYears->toArray();
+    private function lineCharts() {
+        $lineCharts = (new LineChartModel())
+            ->setTitle('Jumlah Mahasiswa & Dosen')
+            ->multiLine()
+            ->setAnimated(true)
+            ->setSmoothCurve();
 
-        foreach($temp as $idx => $year) {
-            $this->colorsMahasiswa[$year] = $hexList[$idx];
+        $mhsYears = Mahasiswa::select(DB::raw("tahun_daftar, COUNT(id) as total_mahasiswa"))
+                ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('tahun_daftar')->get();
+
+        $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
+            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('joined_year')->get();
+
+        foreach($mhsYears as $mahasiswa) {
+            $lineCharts->addSeriesPoint('Mahasiswa' ,$mahasiswa->tahun_daftar, $mahasiswa->total_mahasiswa);
+            $this->ratioSDM[$mahasiswa->tahun_daftar]['mahasiswa'] = $mahasiswa->total_mahasiswa;
         }
 
-        $mahasiswa = Mahasiswa::get();
+        foreach($dosens as $dosen) {
+            $lineCharts->addSeriesPoint('Dosen' ,$dosen->joined_year, $dosen->total_dosen);
+            $this->ratioSDM[$dosen->joined_year]['dosen'] = $dosen->total_dosen;
+        }
 
-        $pieChartModelMahasiswa = $mahasiswa->groupBy('tahun_daftar')
-            ->reduce(function ($pieChartModels, $data) {
-                $tahunDaftar = $data->first()->tahun_daftar;
-                $value = $data->count('id');
+        foreach($this->ratioSDM as $year => $sdm) {
+            $this->ratioSDM[$year]['ratio'] = $this->find_ratio($this->ratioSDM[$year]['dosen'], $this->ratioSDM[$year]['mahasiswa']);
+        }
 
-                return $pieChartModels->addSlice($tahunDaftar, $value, $this->colorsMahasiswa[$tahunDaftar]);
-            }, LivewireCharts::pieChartModel()
-                ->setTitle('Jumlah Mahasiswa')
-                ->setAnimated($this->firstRun)
-                ->setDataLabelsEnabled(true)
-                ->legendPositionBottom()
-                ->legendHorizontallyAlignedCenter()
-                ->setColors($this->colorsMahasiswa)
-                ->withGrid()
-            );
+        return $lineCharts;
+    }
 
-        return $pieChartModelMahasiswa;
+    private function find_ratio($num1, $num2){
+        for($i = $num2; $i > 1; $i--) {
+            if(($num1 % $i) == 0 && ($num2 % $i) == 0) {
+                $num1 = $num1 / $i;
+                $num2 = $num2 / $i;
+            }
+        }
+        return "$num1:$num2";
     }
 }

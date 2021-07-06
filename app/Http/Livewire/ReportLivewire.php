@@ -68,6 +68,7 @@ class ReportLivewire extends Component
                 } else {
                     dispatch(new GenerateBorangStudentSelectionJob($checkBorang));
                     $this->jobHasBeenDispatched();
+                    $this->close();
                 }
             }
 
@@ -108,6 +109,7 @@ class ReportLivewire extends Component
                 } else {
                     dispatch(new GenerateBorangForeignStudentJob($listBorang));
                     $this->jobHasBeenDispatched();
+                    $this->close();
                 }
             }
         }

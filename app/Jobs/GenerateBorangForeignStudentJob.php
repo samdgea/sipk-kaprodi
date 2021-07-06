@@ -27,7 +27,7 @@ class GenerateBorangForeignStudentJob implements ShouldQueue
         $pdf = PDF::loadView('livewire.report.printTemplate.lkps-mahasiswa-asing-pdf-template', ['datas' => $this->foreignStudent])->setPaper('a4', 'landscape')->output();
 
         $periode = $this->foreignStudent->first()->academicYear->tahun_akademik . '-' . $this->foreignStudent->last()->academicYear->tahun_akademik;
-        $path = 'sipk-demo/lkps/seleksi_mahasiswa-' . $periode . '.pdf';
+        $path = 'sipk-demo/lkps/mahasiswa-asing-' . $periode . '.pdf';
 
         Storage::disk('s3')->put($path, $pdf);
 

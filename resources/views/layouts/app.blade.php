@@ -52,6 +52,8 @@
 
         @livewireChartsScripts
 
+        @stack('scripts')
+
         <script>
             toastr.options = {
                 "showMethod": "slideDown",

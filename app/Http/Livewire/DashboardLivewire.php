@@ -6,6 +6,7 @@ use App\Models\Dosen;
 use Asantibanez\LivewireCharts\Facades\LivewireCharts;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\Mahasiswa;
@@ -13,11 +14,30 @@ use Colors\RandomColor;
 
 class DashboardLivewire extends Component
 {
-    public $viewChart = 'column';
-    public $toYear = 2021;
-    public $fromYear = 2016;
+    public $summary = [
+        'jumlahMahasiswaPeriode',
+        'jumlahDosenPeriode',
+        'ratioSDM'
+    ];
+//    public $ratioSDM;
 
-    public $ratioSDM;
+    public $dashboardFilter;
+
+    public $filterConfiguration = [
+        'showCharts' => false,
+        'viewChart' => 'column',
+        'filterRange' => [
+            'fromYear',
+            'toYear'
+        ]
+    ];
+
+    public function __construct($id = null)
+    {
+        parent::__construct($id);
+        $this->filterConfiguration['filterRange']['toYear'] = Carbon::now()->year;
+        $this->filterConfiguration['filterRange']['fromYear'] = Carbon::now()->subYears(5)->year;
+    }
 
     /**
      * Get the view / contents that represent the component.
@@ -26,7 +46,11 @@ class DashboardLivewire extends Component
      */
     public function render()
     {
-        if ($this->viewChart == 'column') {
+        $this->summary['jumlahMahasiswaPeriode'] = Mahasiswa::whereBetween('tahun_daftar', [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->count();
+        $this->summary['jumlahDosenPeriode'] = Dosen::whereRaw("YEAR(date_joined) BETWEEN ? AND ?",  [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->count();
+        $this->summary['ratioSDM'] = $this->find_ratio($this->summary['jumlahMahasiswaPeriode'], $this->summary['jumlahDosenPeriode']);
+
+        if ($this->filterConfiguration['viewChart'] == 'column') {
             $this->ratioSDM = null;
             $chartModel = $this->barCharts();
         } else {
@@ -39,6 +63,14 @@ class DashboardLivewire extends Component
         ]);
     }
 
+    public function showFilterModal() {
+        $this->dashboardFilter = true;
+    }
+
+    public function closeFilterModal() {
+        $this->dashboardFilter = false;
+    }
+
     private function barCharts() {
         $barCharts = (new ColumnChartModel())
             ->setTitle('Jumlah Mahasiswa & Dosen')
@@ -47,24 +79,24 @@ class DashboardLivewire extends Component
             ->withGrid();
 
         $mhsYears = Mahasiswa::select(DB::raw("tahun_daftar, COUNT(id) as total_mahasiswa"))
-            ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('tahun_daftar')->get();
+            ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('tahun_daftar')->get();
 
         $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
-            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('joined_year')->get();
+            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('joined_year')->get();
 
         foreach ($mhsYears as $mahasiswa) {
             $barCharts->addSeriesColumn('Mahasiswa', "$mahasiswa->tahun_daftar", $mahasiswa->total_mahasiswa);
-            $this->ratioSDM[$mahasiswa->tahun_daftar]['mahasiswa'] = $mahasiswa->total_mahasiswa;
+//            $this->ratioSDM[$mahasiswa->tahun_daftar]['mahasiswa'] = $mahasiswa->total_mahasiswa;
         }
 
         foreach ($dosens as $dosen) {
             $barCharts->addSeriesColumn('Dosen', "$dosen->joined_year", $dosen->total_dosen);
-            $this->ratioSDM[$dosen->joined_year]['dosen'] = $dosen->total_dosen;
+//            $this->ratioSDM[$dosen->joined_year]['dosen'] = $dosen->total_dosen;
         }
 
-        foreach($this->ratioSDM as $year => $sdm) {
-            $this->ratioSDM[$year]['ratio'] = $this->find_ratio($this->ratioSDM[$year]['dosen'], $this->ratioSDM[$year]['mahasiswa']);
-        }
+//        foreach($this->ratioSDM as $year => $sdm) {
+//            $this->ratioSDM[$year]['ratio'] = $this->find_ratio($this->ratioSDM[$year]['dosen'], $this->ratioSDM[$year]['mahasiswa']);
+//        }
 
         return $barCharts;
     }
@@ -77,10 +109,10 @@ class DashboardLivewire extends Component
             ->setSmoothCurve();
 
         $mhsYears = Mahasiswa::select(DB::raw("tahun_daftar, COUNT(id) as total_mahasiswa"))
-                ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('tahun_daftar')->get();
+                ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('tahun_daftar')->get();
 
         $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
-            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->fromYear, $this->toYear])->groupBy('joined_year')->get();
+            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('joined_year')->get();
 
         foreach($mhsYears as $mahasiswa) {
             $lineCharts->addSeriesPoint('Mahasiswa' ,$mahasiswa->tahun_daftar, $mahasiswa->total_mahasiswa);

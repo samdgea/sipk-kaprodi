@@ -32,7 +32,7 @@ class ProfileInformationTest extends TestCase
                 ->call('updateProfileInformation');
 
         $this->assertEquals('Test', $user->fresh()->first_name);
-        $this->assertEquals('Name', $user->fresh()->last_name);
+        $this->assertEquals('User', $user->fresh()->last_name);
         $this->assertEquals('test@example.com', $user->fresh()->email);
     }
 }

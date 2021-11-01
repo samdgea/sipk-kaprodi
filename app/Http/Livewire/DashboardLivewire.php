@@ -56,7 +56,7 @@ class DashboardLivewire extends Component
             })->whereYear('date_joined', '>=', $this->filterConfiguration['filterRange']['fromYear'])
                 ->whereYear('date_joined', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
         } else {
-            $this->summary['jumlahDosenPeriode'] = Dosen::whereYear('date_join', '>=', $this->filterConfiguration['filterRange']['fromYear'])
+            $this->summary['jumlahDosenPeriode'] = Dosen::whereYear('date_joined', '>=', $this->filterConfiguration['filterRange']['fromYear'])
                 ->whereYear('date_joined', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
         }
 

@@ -27,6 +27,7 @@ class DashboardLivewire extends Component
         'showCharts' => true,
         'viewChart' => 'column',
         'filterRange' => [
+            'dosenLastEducation',
             'fromYear',
             'toYear'
         ]
@@ -37,6 +38,7 @@ class DashboardLivewire extends Component
         parent::__construct($id);
         $this->filterConfiguration['filterRange']['toYear'] = Carbon::now()->year;
         $this->filterConfiguration['filterRange']['fromYear'] = Carbon::now()->subYears(5)->year;
+        $this->filterConfiguration['filterRange']['dosenLastEducation'] = null;
     }
 
     /**
@@ -47,14 +49,22 @@ class DashboardLivewire extends Component
     public function render()
     {
         $this->summary['jumlahMahasiswaPeriode'] = Mahasiswa::whereBetween('tahun_daftar', [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->count();
-        $this->summary['jumlahDosenPeriode'] = Dosen::whereRaw("YEAR(date_joined) BETWEEN ? AND ?",  [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->count();
+
+        if (!empty($this->filterConfiguration['filterRange']['dosenLastEducation'])) {
+            $this->summary['jumlahDosenPeriode'] = Dosen::whereHas('dosenEducation', function($q) {
+                $q->where('education_type', $this->filterConfiguration['filterRange']['dosenLastEducation']);
+            })->whereYear('date_join', '>=', $this->filterConfiguration['filterRange']['fromYear'])
+                ->whereYear('date_join', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
+        } else {
+            $this->summary['jumlahDosenPeriode'] = Dosen::whereYear('date_join', '>=', $this->filterConfiguration['filterRange']['fromYear'])
+                ->whereYear('date_join', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
+        }
+
         $this->summary['ratioSDM'] = $this->find_ratio($this->summary['jumlahMahasiswaPeriode'], $this->summary['jumlahDosenPeriode']);
 
         if ($this->filterConfiguration['viewChart'] == 'column') {
-            $this->ratioSDM = null;
             $chartModel = $this->barCharts();
         } else {
-            $this->ratioSDM = null;
             $chartModel = $this->lineCharts();
         }
 

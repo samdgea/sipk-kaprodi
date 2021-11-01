@@ -62,6 +62,14 @@
                             </center>
                         </div>
                         <div class="mb-4">
+                            <label for="dosenLastEducation" class="block text-gray-700 text-sm font-bold mb-2">Pendidikan Terakhir Dosen</label>
+                            <select id="dosenLastEducation"  class="appearance-none checked:bg-blue-600 checked:border-transparent" wire:model="filterConfiguration.dosenLastEducation">
+                                <option value="">-- Semua Pendidikan Terakhir --</option>
+                                <option value="S2">Magister / S2</option>
+                                <option value="S3">Doktoral / S3</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
                             <label for="showCharts" class="block text-gray-700 text-sm font-bold mb-2">
                                 <input id="showCharts" type="checkbox" class="appearance-none checked:bg-blue-600 checked:border-transparent" wire:model="filterConfiguration.showCharts">
                                 Show Charts

@@ -23,4 +23,8 @@ class Dosen extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function dosenEducation() {
+        return $this->hasOne(DosenEducation::class, 'id_dosen', 'id');
+    }
 }

@@ -24,7 +24,7 @@ class DashboardLivewire extends Component
     public $dashboardFilter;
 
     public $filterConfiguration = [
-        'showCharts' => false,
+        'showCharts' => true,
         'viewChart' => 'column',
         'filterRange' => [
             'fromYear',

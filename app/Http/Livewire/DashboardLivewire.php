@@ -53,11 +53,11 @@ class DashboardLivewire extends Component
         if (!empty($this->filterConfiguration['filterRange']['dosenLastEducation'])) {
             $this->summary['jumlahDosenPeriode'] = Dosen::whereHas('dosenEducation', function($q) {
                 $q->where('education_type', $this->filterConfiguration['filterRange']['dosenLastEducation']);
-            })->whereYear('date_join', '>=', $this->filterConfiguration['filterRange']['fromYear'])
-                ->whereYear('date_join', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
+            })->whereYear('date_joined', '>=', $this->filterConfiguration['filterRange']['fromYear'])
+                ->whereYear('date_joined', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
         } else {
             $this->summary['jumlahDosenPeriode'] = Dosen::whereYear('date_join', '>=', $this->filterConfiguration['filterRange']['fromYear'])
-                ->whereYear('date_join', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
+                ->whereYear('date_joined', '<=', $this->filterConfiguration['filterRange']['toYear'])->count();
         }
 
         $this->summary['ratioSDM'] = $this->find_ratio($this->summary['jumlahMahasiswaPeriode'], $this->summary['jumlahDosenPeriode']);

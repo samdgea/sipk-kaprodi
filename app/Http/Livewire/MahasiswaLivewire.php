@@ -32,7 +32,7 @@ class MahasiswaLivewire extends Component
             if (!empty($this->filter['tahunAngkatan'])) {
                 $mahasiswa = Mahasiswa::where('nim_mahasiswa', 'like', $this->filter['tahunAngkatan'] . '%')->where('first_name', 'like', '%' . $this->searchMahasiswa . '%')->orWhere('last_name', 'like', '%' . $this->searchMahasiswa . '%')->orderBy('nim_mahasiswa', 'DESC')->paginate(10);
             } else {
-                $mahasiswa = Mahasiswa::where('first_name', 'like', $this->searchMahasiswa . '%')->orWhere('last_name', 'like', '%' . $this->searchMahasiswa . '%')->orderBy('nim_mahasiswa', 'DESC')->paginate(10);
+                $mahasiswa = Mahasiswa::where('first_name', 'like', '%' . $this->searchMahasiswa . '%')->orWhere('last_name', 'like', '%' . $this->searchMahasiswa . '%')->orderBy('nim_mahasiswa', 'DESC')->paginate(10);
             }
         } else {
             if (!empty($this->filter['tahunAngkatan'])) {

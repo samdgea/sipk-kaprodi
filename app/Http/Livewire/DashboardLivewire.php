@@ -167,9 +167,9 @@ class DashboardLivewire extends Component
             $this->ratioSDM[$dosen->joined_year]['dosen'] = $dosen->total_dosen;
         }
 
-        foreach($this->ratioSDM as $year => $sdm) {
-            $this->ratioSDM[$year]['ratio'] = $this->find_ratio($this->ratioSDM[$year]['dosen'], $this->ratioSDM[$year]['mahasiswa']);
-        }
+//        foreach($this->ratioSDM as $year => $sdm) {
+//            $this->ratioSDM[$year]['ratio'] = $this->find_ratio($this->ratioSDM[$year]['dosen'], $this->ratioSDM[$year]['mahasiswa']);
+//        }
 
         return $lineCharts;
     }

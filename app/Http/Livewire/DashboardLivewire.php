@@ -27,9 +27,9 @@ class DashboardLivewire extends Component
         'showCharts' => true,
         'viewChart' => 'column',
         'filterRange' => [
-            'dosenLastEducation',
-            'fromYear',
-            'toYear'
+            'dosenLastEducation' => null,
+            'fromYear' => null,
+            'toYear' => null
         ]
     ];
 
@@ -89,10 +89,27 @@ class DashboardLivewire extends Component
             ->withGrid();
 
         $mhsYears = Mahasiswa::select(DB::raw("tahun_daftar, COUNT(id) as total_mahasiswa"))
-            ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('tahun_daftar')->get();
+            ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])
+            ->groupBy('tahun_daftar')->get();
 
-        $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
-            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('joined_year')->get();
+        if (!empty($this->filterConfiguration['filterRange']['dosenLastEducation'])) {
+            $dosens = DB::select("
+                SELECT YEAR(`dosen`.`date_joined`) as `joined_year`, COUNT(`dosen`.`id`) as `total_dosen`
+                FROM `dosen`
+                JOIN `dosen_education` ON `dosen_education`.`id_dosen` = `dosen`.`id`
+                WHERE
+                    `dosen_education`.`education_type` = ? AND
+                    YEAR(`dosen`.`date_joined`) BETWEEN ? AND ?
+                GROUP BY `joined_year`
+            ", [
+                $this->filterConfiguration['filterRange']['dosenLastEducation'],
+                $this->filterConfiguration['filterRange']['fromYear'],
+                $this->filterConfiguration['filterRange']['toYear']
+            ]);
+        } else {
+            $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
+                ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('joined_year')->get();
+        }
 
         foreach ($mhsYears as $mahasiswa) {
             $barCharts->addSeriesColumn('Mahasiswa', "$mahasiswa->tahun_daftar", $mahasiswa->total_mahasiswa);
@@ -121,8 +138,24 @@ class DashboardLivewire extends Component
         $mhsYears = Mahasiswa::select(DB::raw("tahun_daftar, COUNT(id) as total_mahasiswa"))
                 ->whereRaw("YEAR(tahun_daftar) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('tahun_daftar')->get();
 
-        $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
-            ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('joined_year')->get();
+        if (!empty($this->filterConfiguration['filterRange']['dosenLastEducation'])) {
+            $dosens = DB::select("
+                SELECT YEAR(`dosen`.`date_joined`) as `joined_year`, COUNT(`dosen`.`id`) as `total_dosen`
+                FROM `dosen`
+                JOIN `dosen_education` ON `dosen_education`.`id_dosen` = `dosen`.`id`
+                WHERE
+                    `dosen_education`.`education_type` = ? AND
+                    YEAR(`dosen`.`date_joined`) BETWEEN ? AND ?
+                GROUP BY `joined_year`
+            ", [
+                $this->filterConfiguration['filterRange']['dosenLastEducation'],
+                $this->filterConfiguration['filterRange']['fromYear'],
+                $this->filterConfiguration['filterRange']['toYear']
+            ]);
+        } else {
+            $dosens = Dosen::select(DB::raw('YEAR(date_joined) as joined_year, COUNT(id) as total_dosen'))
+                ->whereRaw("YEAR(date_joined) BETWEEN ? AND ?", [$this->filterConfiguration['filterRange']['fromYear'], $this->filterConfiguration['filterRange']['toYear']])->groupBy('joined_year')->get();
+        }
 
         foreach($mhsYears as $mahasiswa) {
             $lineCharts->addSeriesPoint('Mahasiswa' ,$mahasiswa->tahun_daftar, $mahasiswa->total_mahasiswa);

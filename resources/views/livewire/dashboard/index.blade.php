@@ -63,7 +63,8 @@
                         </div>
                         <div class="mb-4">
                             <label for="dosenLastEducation" class="block text-gray-700 text-sm font-bold mb-2">Pendidikan Terakhir Dosen</label>
-                            <select id="dosenLastEducation"  class="appearance-none checked:bg-blue-600 checked:border-transparent" wire:model="filterConfiguration.dosenLastEducation">
+                            <select id="dosenLastEducation"  wire:model="filterConfiguration.filterRange.dosenLastEducation"
+                                    class="p-2 px-4 py-2 pr-8 w-full leading-tight bg-white border border-gray-400 rounded shadow appearance-none hover:border-gray-500 focus:outline-none focus:shadow-outline">
                                 <option value="">-- Semua Pendidikan Terakhir --</option>
                                 <option value="S2">Magister / S2</option>
                                 <option value="S3">Doktoral / S3</option>

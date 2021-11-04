@@ -159,12 +159,12 @@ class DashboardLivewire extends Component
 
         foreach($mhsYears as $mahasiswa) {
             $lineCharts->addSeriesPoint('Mahasiswa' ,$mahasiswa->tahun_daftar, $mahasiswa->total_mahasiswa);
-            $this->ratioSDM[$mahasiswa->tahun_daftar]['mahasiswa'] = $mahasiswa->total_mahasiswa;
+//            $this->ratioSDM[$mahasiswa->tahun_daftar]['mahasiswa'] = $mahasiswa->total_mahasiswa;
         }
 
         foreach($dosens as $dosen) {
             $lineCharts->addSeriesPoint('Dosen' ,$dosen->joined_year, $dosen->total_dosen);
-            $this->ratioSDM[$dosen->joined_year]['dosen'] = $dosen->total_dosen;
+//            $this->ratioSDM[$dosen->joined_year]['dosen'] = $dosen->total_dosen;
         }
 
 //        foreach($this->ratioSDM as $year => $sdm) {

@@ -2,12 +2,12 @@
     <div class="p-6">
         <div class="flex items-center">
             <i class="fa fa-user-graduate fa-2x"></i>
-            <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold"><a href="https://laravel.com/docs">Jumlah Mahasiswa</a></div>
+            <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold"><a href="{{ route('mahasiswa') }}">Jumlah Mahasiswa</a></div>
         </div>
 
         <div class="ml-12">
             <div class="mt-2 text-2xl text-gray-500 text-center">
-                {{ $summary['jumlahMahasiswaPeriode'] }}
+                <a href="{{ route('mahasiswa') }}">{{ $summary['jumlahMahasiswaPeriode'] }}</a>
             </div>
 
 {{--            <a href="#">--}}
@@ -25,7 +25,7 @@
     <div class="p-6 border-t border-gray-200 md:border-t-0 md:border-l">
         <div class="flex items-center">
             <i class="fa fa-user-graduate fa-2x"></i>
-            <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold"><a href="https://laravel.com/docs">Jumlah Dosen</a></div>
+            <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">Jumlah Dosen</div>
         </div>
 
         <div class="ml-12">

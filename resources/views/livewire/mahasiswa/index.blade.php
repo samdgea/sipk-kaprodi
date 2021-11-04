@@ -1,7 +1,16 @@
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4">
-            <input class="shadow appearance-none border rounded w-25 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Search by Nim Mahasiswa" wire:model="searchNim">
+            <input class="shadow appearance-none border rounded w-25 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Search by Nama Mahasiswa" wire:model="searchMahasiswa">
+
+            <select id="dosenLastEducation"  wire:model="filter.tahunAngkatan"
+                    class="shadow appearance-none border rounded w-25 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">-- Semua Angkatan --</option>
+                @foreach($listAngkatan as $angkatan)
+                    <option value="{{ substr($angkatan, -2) }}">{{ $angkatan }}</option>
+                @endforeach
+            </select>
+
             <br><br>
             <table class="table-fixed w-full">
                 <thead>

@@ -24,7 +24,16 @@ class Dosen extends Model
         'deleted_at'
     ];
 
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     public function dosenEducation() {
         return $this->hasOne(DosenEducation::class, 'id_dosen', 'id');
+    }
+
+    public function dosenDetail() {
+        return $this->hasOne(DosenDetail::class, 'id_dosen', 'id');
     }
 }

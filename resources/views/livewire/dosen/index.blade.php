@@ -12,7 +12,7 @@
                     <th class="px-4 py-2" style="width: 260px;">Email Address</th>
                     <th class="px-4 py-2">Phone Number</th>
                     <th class="px-4 py-2">Home Number</th>
-                    <th class="px-4 py-2">Action</th>
+                    {{-- <th class="px-4 py-2">Action</th> --}}
                 </tr>
                 </thead>
                 <tbody>
@@ -23,7 +23,7 @@
                         <td class="border px-4 py-2">{{ (!empty($dosen->dosenDetail)) ? $dosen->dosenDetail->email_address : '-' }}</td>
                         <td class="border px-4 py-2">{{ (!empty($dosen->dosenDetail)) ? $dosen->dosenDetail->phone_number : '-' }}</td>
                         <td class="border px-4 py-2">{{ (!empty($dosen->dosenDetail)) ? $dosen->dosenDetail->home_number : '-' }}</td>
-                        <td class="border px-4 py-2"></td>
+                        {{-- <td class="border px-4 py-2"></td> --}}
                     </tr>
                 @empty
                     <tr>

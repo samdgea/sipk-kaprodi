@@ -11,6 +11,7 @@ class DosenLivewire extends Component
     use WithPagination;
 
     public $searchDosen;
+    public $formEditDetailDosen;
 
     public Dosen $dosen;
 

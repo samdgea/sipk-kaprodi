@@ -1,7 +1,7 @@
 <div>
     <x-jet-dialog-modal wire:model="formViewBorangLokal">
         <x-slot name="title">
-            College Student Form - Academic Year : @if(!empty($borangLokal->academicYear)) (<strong>{{ $borangLokal->academicYear->tahun_akademik }} {{ ($borangLokal->academicYear->semester_akademik == "1") ? "Ganjil" : "Genap" }}</strong>) @endif
+            College Student Form - Academic Year : @if(!empty($borangLokal->academicYear)) (<strong>{{ $borangLokal->academicYear->tahun_akademik }} {{ ($borangLokal->academicYear->semester_akademik == "1") ? "Genap" : "Ganjil" }}</strong>) @endif
         </x-slot>
 
         <x-slot name="content">

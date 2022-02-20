@@ -1,7 +1,7 @@
 <div>
     <x-jet-dialog-modal wire:model="formViewBorangAsing">
         <x-slot name="title">
-            Foreign Student Form - Academic Year : @if(!empty($borangAsing->academicYear)) (<strong>{{ $borangAsing->academicYear->tahun_akademik }} {{ ($borangAsing->academicYear->semester_akademik == "1") ? "Ganjil" : "Genap" }}</strong>) @endif
+            Foreign Student Form - Academic Year : @if(!empty($borangAsing->academicYear)) (<strong>{{ $borangAsing->academicYear->tahun_akademik }} {{ ($borangAsing->academicYear->semester_akademik == "1") ? "Genap" : "Ganjil" }}</strong>) @endif
         </x-slot>
 
         <x-slot name="content">

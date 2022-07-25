@@ -18,7 +18,8 @@ class UserSeeder extends Seeder
             'first_name' => 'Abdilah',
             'last_name' => 'Sammi',
             'email' => 'hello@abdilah.id',
-            'password' => \Hash::make('password')
+            'password' => \Hash::make('password'),
+            'account_status' => 1
         ]);
 
         $userSU->assignRole('Super User');

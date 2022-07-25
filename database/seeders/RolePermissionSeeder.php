@@ -16,6 +16,7 @@ class RolePermissionSeeder extends Seeder
     public function run()
     {
         $roleK = Role::create(['name' => 'Kaprodi']);
+        $roleD = Role::create(['name' => 'Dekan']);
         $roleSU = Role::create(['name' => 'Super User']);
 
         $permissionManageUser = Permission::create(['name' => 'view-user']);
@@ -33,6 +34,13 @@ class RolePermissionSeeder extends Seeder
            $permissionCreateInputKM,
            $permissionEditInputKM,
            $permissionDeleteInputKM
+        ]);
+
+        $roleD->syncPermissions([
+            $permissionInputKualitasMahasiswa,
+            $permissionCreateInputKM,
+            $permissionEditInputKM,
+            $permissionDeleteInputKM
         ]);
 
         $roleSU->syncPermissions([

@@ -18,7 +18,6 @@ class MahasiswaFactory extends Factory
     {
         return [
             'faculty_id' => 1,
-//            'study_program_id' => 1,
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'tahun_daftar' => '20',

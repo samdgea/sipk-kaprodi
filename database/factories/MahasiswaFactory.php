@@ -16,19 +16,28 @@ class MahasiswaFactory extends Factory
      */
     public function definition()
     {
+        $tahunDaftar = $this->faker->year;
+        $expectedGraduateYear = (int)$tahunDaftar + 4;
+
         return [
             'faculty_id' => 1,
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
-            'tahun_daftar' => '20',
-            'gender' => $this->faker->randomElement(['M', 'F'])
+            'tahun_daftar' => $tahunDaftar,
+            'expected_graduate_year' => $expectedGraduateYear,
+            'gender' => $this->faker->randomElement(['M', 'F']),
+
         ];
     }
 
     public function tahunDaftar($tahun) {
-        return $this->state(function (array $attributes) use ($tahun) {
+        $tahunDaftar = '20' . $tahun;
+        $expectedGraduateYear = (int)$tahunDaftar + 4;
+
+        return $this->state(function (array $attributes) use ($tahunDaftar, $expectedGraduateYear) {
             return [
-                'tahun_daftar' => '20' . $tahun
+                'tahun_daftar' => $tahunDaftar,
+                'expected_graduate_year' => $expectedGraduateYear
             ];
         });
     }

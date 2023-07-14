@@ -14,7 +14,7 @@ class CreateDosenEducationTable extends Migration
     public function up()
     {
         Schema::create('dosen_education', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->bigInteger('id_dosen');
             $table->enum('education_type', ['S2', 'S3'])->default('S2');
             $table->string('university_name')->default('Universitas Persada Indonesia Y.A.I');

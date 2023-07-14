@@ -20,8 +20,20 @@ class Mahasiswa extends Model
         'first_name',
         'last_name',
         'tahun_daftar',
+        'expected_graduate_year',
         'gender',
-        'program_studi'
+        'program_studi',
+        'type_mahasiswa',
+        'status_mahasiswa',
+        'status_cuti',
+        'is_graduated',
+        'is_work_related_with_study_program',
+        'created_by',
+        'updated_by'
+    ];
+
+    protected $appends = [
+        'ipk_semester'
     ];
 
     protected static function boot()
@@ -58,5 +70,15 @@ class Mahasiswa extends Model
     public function detailSemester()
     {
         return $this->hasMany(DetailSemester::class, 'mahasiswa_id', 'id');
+    }
+
+    public function prestasiMahasiswa()
+    {
+        return $this->hasMany(PrestasiMahasiswa::class, 'mahasiswa_id', 'id');
+    }
+
+    public function getIpkSemesterAttribute()
+    {
+        return $this->detailSemester()->avg('ips');
     }
 }

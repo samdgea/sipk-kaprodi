@@ -16,8 +16,14 @@ class CreateMahasiswasTable extends Migration
             $table->string('first_name', 50);
             $table->string('last_name', 50);
             $table->year('tahun_daftar')->nullable();
+            $table->year('expected_graduate_year')->nullable();
             $table->enum('gender', ["M", "F"])->default('M');
             $table->string('program_studi',5)->default('TIF');
+            $table->enum('type_mahasiswa', ['REGULAR', 'ASING', 'TRANSFER'])->default('REGULAR');
+            $table->boolean('status_mahasiswa')->default(true);
+            $table->boolean('status_cuti')->default(false);
+            $table->boolean('is_graduated')->default(false);
+            $table->boolean('is_work_related_with_study_program')->default(false)->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->timestamps();
             $table->bigInteger('updated_by')->nullable();
